@@ -48,6 +48,11 @@ func New(version string) func() *schema.Provider {
 									Type: schema.TypeString,
 								},
 							},
+							"ca_file": {
+								Description: "Path to a custom Certificate Authority certificate",
+								Type:        schema.TypeString,
+								Optional:    true,
+							},
 						},
 					},
 				},

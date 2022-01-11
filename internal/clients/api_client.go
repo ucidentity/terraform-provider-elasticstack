@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -81,6 +82,17 @@ func NewApiClientFunc(version string, p *schema.Provider) func(context.Context, 
 						endpoints = append(endpoints, e.(string))
 					}
 					config.Addresses = endpoints
+				}
+				if caFile, ok := esConfig["ca_file"]; ok && caFile.(string) != "" {
+					caCert, err := ioutil.ReadFile(caFile.(string))
+					if err != nil {
+						diags = append(diags, diag.Diagnostic{
+							Severity: diag.Error,
+							Summary:  "Unable to read CA File",
+							Detail:   err.Error(),
+						})
+					}
+					config.CACert = caCert
 				}
 			}
 		}
